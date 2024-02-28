@@ -36,14 +36,41 @@ function playGame() {
     console.log(`You: ${playerScore}, Computer: ${computerScore}`)
 }
 
+const scoreChangedEvent = new CustomEvent('scoreChangedEvent');
 
-
+function updateScore(scoreContainer) {
+    const currentScore = Number.parseInt(scoreContainer.textContent);
+    scoreContainer.textContent = currentScore + 1;
+}
 
 const container = Array.from(document.querySelectorAll('#container button'));
+const playerScoreContainer = document.querySelector('#player-score');
+const computerScoreContainer = document.querySelector('#computer-score');
+const resultContainer = document.querySelector('#result');
+const scoreContainer = document.querySelector('#score');
+
+scoreContainer.addEventListener('scoreChangedEvent', () =>{
+    console.log("the score was changed");
+})
+
 
 container.forEach((button) => 
     button.addEventListener('click', () => {
-        let result = playRound(button.textContent, getComputerChoice());
-        console.log(result);
+        const playerChoice = button.textContent;
+        const computerChoice = getComputerChoice();
+        let result = playRound(playerChoice, computerChoice);
+
+        if (result === 'You win!') {
+            updateScore(playerScoreContainer);
+            scoreContainer.dispatchEvent(scoreChangedEvent);
+        } else if (result !== "It's a tie, WAOW!") {
+            updateScore(computerScoreContainer);
+            scoreContainer.dispatchEvent(scoreChangedEvent);
+        }
+
+        resultContainer.textContent = `
+            You chose ${playerChoice}, Computer chose ${computerChoice}.
+            ${result}
+        `;
     })
 )
