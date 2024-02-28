@@ -5,7 +5,6 @@ function getComputerChoice() {
 
 function playRound(playerSelection, computerSelection) {
     playerSelection = playerSelection.toLowerCase();
-    
     if (playerSelection === computerSelection)
         return "It's a tie, WAOW!";
 
@@ -37,4 +36,14 @@ function playGame() {
     console.log(`You: ${playerScore}, Computer: ${computerScore}`)
 }
 
-playGame()
+
+
+
+const container = Array.from(document.querySelectorAll('#container button'));
+
+container.forEach((button) => 
+    button.addEventListener('click', () => {
+        let result = playRound(button.textContent, getComputerChoice());
+        console.log(result);
+    })
+)
